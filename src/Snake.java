@@ -16,6 +16,8 @@ public class Snake {
     private int x, y;
     private int xSpeed, ySpeed;
     private int extraLength = 0;
+    // Tail array that tracks the snake's tail segments. The end of the tail
+    // is at the end of the array.
     private ArrayList<SnakeTailSegment> tail = new ArrayList<SnakeTailSegment>();
     
     public Snake(int x, int y) {
@@ -47,13 +49,13 @@ public class Snake {
     public void update() {
         // Updates the snake's tail using the tail ArrayList.
         if (extraLength > 0) {
-            for (int i = 0; i < extraLength - 1; i++) {
-                tail.get(i).x = tail.get(i + 1).x;
-                tail.get(i).y = tail.get(i + 1).y;
+            for (int i = extraLength - 1; i > 0; i--) {
+                tail.get(i).x = tail.get(i - 1).x;
+                tail.get(i).y = tail.get(i - 1).y;
             }
 
-            tail.get(extraLength - 1).x = x;
-            tail.get(extraLength - 1).y = y;
+            tail.get(0).x = x;
+            tail.get(0).y = y;
         }
         
         // Updates the snake's position based on its speed.

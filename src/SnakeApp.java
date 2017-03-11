@@ -57,14 +57,13 @@ public class SnakeApp extends Application {
                 }
             }
         });
-
-        Food food = new Food();
         
         //// GAME LOOP ////
 
         new AnimationTimer() {
             final long startNanoTime = System.nanoTime();
             private long timeSinceLastUpdate = 0;
+            Food food = new Food();
             
             @Override
             public void handle(long currentNanoTime) {
@@ -74,14 +73,17 @@ public class SnakeApp extends Application {
                 if (currentNanoTime - timeSinceLastUpdate >= 1 / APP_FPS * 1_000_000_000) {
                     // Clear canvas
                     gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
-                     // Draw snake
+                    
+                     // Update and draw snake
                     snake.update();
                     snake.render(gc);
                     
+                    // Spawns new food is snake eats food.
                     if (snake.eatFood(food)) {
                         food.randomLocation();
                     }
                     
+                    // Draw food
                     food.render(gc);
                     
                     timeSinceLastUpdate = currentNanoTime;
