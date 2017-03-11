@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 public class Snake {
     private int x, y;
     private int xSpeed, ySpeed;
-    private int extraLength = 0;
+    public int extraLength = 0;
     // Tail array that tracks the snake's tail segments. The end of the tail
     // is at the end of the array.
     private ArrayList<SnakeTailSegment> tail = new ArrayList<SnakeTailSegment>();
@@ -26,6 +26,7 @@ public class Snake {
         setSpeed(1, 0);
     }
     
+    // Checks if the snake eats a food. Extends the snake's tail if so.
     public boolean eatFood(Food food) {
         if (x == food.getX() && y == food.getY()) {
             extraLength++;
@@ -34,6 +35,21 @@ public class Snake {
         } else {
             return false;
         }
+    }
+    
+    // Returns the snake's X position.
+    public int getX() {
+        return x;
+    }
+    
+    // Returns the snake's Y position.
+    public int getY() {
+        return y;
+    }
+    
+    // Returns the snake's tail.
+    public ArrayList<SnakeTailSegment> getTail() {
+        return tail;
     }
     
     // Checks if the snake has ran into a wall or itself.

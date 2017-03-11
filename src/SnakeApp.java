@@ -85,7 +85,7 @@ public class SnakeApp extends Application {
                     
                     // Spawns new food if snake eats food.
                     if (snake.eatFood(food)) {
-                        food.randomLocation();
+                        food.randomLocation(snake);
                     }
                     
                     // Draw food

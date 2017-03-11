@@ -22,7 +22,8 @@ public class Food {
     
     // Creates Food with random location.
     public Food() {
-        randomLocation();
+        this.x = getRandomX();
+        this.y = getRandomY();
     }
     
     // Returns the food's x coordinate.
@@ -35,10 +36,33 @@ public class Food {
         return y;
     }
     
-    // Places the food at a random location on the grid.
-    public void randomLocation() {
-        this.x = (int)(Math.random() * (SnakeApp.APP_WIDTH / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
-        this.y = (int)(Math.random() * (SnakeApp.APP_HEIGHT / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
+    public int getRandomX() {
+        return (int)(Math.random() * (SnakeApp.APP_WIDTH / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
+    }
+    
+    public int getRandomY() {
+        return (int)(Math.random() * (SnakeApp.APP_HEIGHT / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
+    }
+    
+    // Places the food at a random location on the grid without placing directly
+    // on snake.
+    public void randomLocation(Snake snake) {
+        boolean validLocation = true;
+        do {
+            this.x = getRandomX();
+            this.y = getRandomY();
+            
+            for (int i = 0; i < snake.getTail().size(); i++) {
+                if ((x == snake.getTail().get(i).x && y == snake.getTail().get(i).y) ||
+                        (x == snake.getX() && y == snake.getY())) {
+                    System.out.println("Invalid food location at " + x + " " + y);
+                    validLocation = false;
+                    break;
+                } else {
+                    validLocation = true;
+                }
+            }
+        } while (!validLocation);
     }
     
     // Renders the food.
