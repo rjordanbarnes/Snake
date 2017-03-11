@@ -19,9 +19,12 @@ public class SnakeApp extends Application {
     public final static int APP_WIDTH = 800;
     public final static int APP_HEIGHT = 600;
     public final static int BLOCK_SIZE = 20;
+    public final static double APP_FPS = 10;
     
     @Override
     public void start(Stage primaryStage) {
+        //// INITIALIZATION ////
+        
         // Sets the title of the window
         primaryStage.setTitle("Snake");
         primaryStage.setResizable(false);
@@ -40,7 +43,9 @@ public class SnakeApp extends Application {
         // Create snake
         Snake snake = new Snake(0, 0);
         
-        // Sets the 
+        //// KEY HANDLING ////
+        
+        // Sets the snake's directional speed based on key presses.
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -53,25 +58,27 @@ public class SnakeApp extends Application {
             }
         });
 
-        final long startNanoTime = System.nanoTime();
-        
         Food food = new Food(gc);
+        
+        //// GAME LOOP ////
 
         new AnimationTimer() {
-            private long lastUpdate = 0;
+            final long startNanoTime = System.nanoTime();
+            private long timeSinceLastUpdate = 0;
             
             @Override
             public void handle(long currentNanoTime) {
-                double secondsElapsed = (currentNanoTime - startNanoTime) / 1000000000.0;
-               
-                if (currentNanoTime - lastUpdate >= 60000000) {
+                double secondsElapsed = (currentNanoTime - startNanoTime) / 1_000_000_000.0;
+                
+                // Limits canvas refresh rate to APP_FPS
+                if (currentNanoTime - timeSinceLastUpdate >= 1 / APP_FPS * 1_000_000_000) {
                     // Clear canvas
                     gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
                      // Draw snake
                     snake.update();
                     snake.render(gc);
                     food.render(gc);
-                    lastUpdate = currentNanoTime;
+                    timeSinceLastUpdate = currentNanoTime;
                 }
             }
         }.start();
