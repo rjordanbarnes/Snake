@@ -1,4 +1,3 @@
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -13,17 +12,32 @@ import javafx.scene.paint.Color;
  * @author Jordan
  */
 public class Food {
-    int x, y;
+    private int x, y;
     
     public Food(int x, int y) {
         this.x = x;
         this.y = y;
     }
     
-    public Food(GraphicsContext gc) {
+    
+    public Food() {
+        randomLocation();
+    }
+    
+    // Returns the food's x coordinate.
+    public int getX() {
+        return x;
+    }
+    
+    // Returns the food's y coordinate.
+    public int getY() {
+        return y;
+    }
+    
+    // Places the food at a random location on the grid.
+    public void randomLocation() {
         this.x = (int)(Math.random() * (SnakeApp.APP_WIDTH / SnakeApp.BLOCK_SIZE + 1)) * SnakeApp.BLOCK_SIZE;
         this.y = (int)(Math.random() * (SnakeApp.APP_HEIGHT / SnakeApp.BLOCK_SIZE + 1)) * SnakeApp.BLOCK_SIZE;
-        this.render(gc);
     }
     
     public void render(GraphicsContext gc) {

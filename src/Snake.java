@@ -1,6 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,10 +21,21 @@ public class Snake {
         setSpeed(1, 0);
     }
     
+    public boolean eatFood(Food food) {
+        if (x == food.getX() && y == food.getY()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     // Changes the snakes speed.
     public void setSpeed(int x, int y) {
-        xSpeed = x;
-        ySpeed = y;
+        // Prevents snake from going backwards.
+        if (ySpeed + y != 0 || xSpeed + x != 0) {
+            ySpeed = y;
+            xSpeed = x;
+        }
     }
     
     // Moves the snake based on its speed.

@@ -20,7 +20,7 @@ public class SnakeApp extends Application {
     public final static int APP_HEIGHT = 600;
     public final static int BLOCK_SIZE = 20;
     public final static double APP_FPS = 10;
-    
+
     @Override
     public void start(Stage primaryStage) {
         //// INITIALIZATION ////
@@ -58,7 +58,7 @@ public class SnakeApp extends Application {
             }
         });
 
-        Food food = new Food(gc);
+        Food food = new Food();
         
         //// GAME LOOP ////
 
@@ -77,7 +77,13 @@ public class SnakeApp extends Application {
                      // Draw snake
                     snake.update();
                     snake.render(gc);
+                    
+                    if (snake.eatFood(food)) {
+                        food.randomLocation();
+                    }
+                    
                     food.render(gc);
+                    
                     timeSinceLastUpdate = currentNanoTime;
                 }
             }
