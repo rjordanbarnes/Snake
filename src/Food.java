@@ -14,11 +14,13 @@ import javafx.scene.paint.Color;
 public class Food {
     private int x, y;
     
+    // Creates Food with specific location.
     public Food(int x, int y) {
         this.x = x;
         this.y = y;
     }
     
+    // Creates Food with random location.
     public Food() {
         randomLocation();
     }
@@ -39,6 +41,7 @@ public class Food {
         this.y = (int)(Math.random() * (SnakeApp.APP_HEIGHT / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
     }
     
+    // Renders the food.
     public void render(GraphicsContext gc) {
         gc.setFill(Color.PINK);
         gc.fillRect(x, y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE);
