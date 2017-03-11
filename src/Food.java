@@ -36,16 +36,18 @@ public class Food {
         return y;
     }
     
+    // Returns a random X coordinate based on the grid size.
     public int getRandomX() {
         return (int)(Math.random() * (SnakeApp.APP_WIDTH / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
     }
     
+    // Returns a random Y coordinate based on the grid size.
     public int getRandomY() {
         return (int)(Math.random() * (SnakeApp.APP_HEIGHT / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
     }
     
-    // Places the food at a random location on the grid without placing directly
-    // on snake.
+    // Places the food at a random location on the grid without placing it directly
+    // on the snake.
     public void randomLocation(Snake snake) {
         boolean validLocation = true;
         do {
@@ -55,7 +57,6 @@ public class Food {
             for (int i = 0; i < snake.getTail().size(); i++) {
                 if ((x == snake.getTail().get(i).x && y == snake.getTail().get(i).y) ||
                         (x == snake.getX() && y == snake.getY())) {
-                    System.out.println("Invalid food location at " + x + " " + y);
                     validLocation = false;
                     break;
                 } else {

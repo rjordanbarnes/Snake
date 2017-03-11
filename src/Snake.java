@@ -15,7 +15,9 @@ import javafx.scene.paint.Color;
 public class Snake {
     private int x, y;
     private int xSpeed, ySpeed;
-    public int extraLength = 0;
+    private int extraLength = 0;
+    private Color headColor = Color.GREEN;
+    private Color tailColor = Color.GREEN;
     // Tail array that tracks the snake's tail segments. The end of the tail
     // is at the end of the array.
     private ArrayList<SnakeTailSegment> tail = new ArrayList<SnakeTailSegment>();
@@ -57,6 +59,7 @@ public class Snake {
         // Checks if the snake's head hits any part of the tail.
         for (int i = 0; i < extraLength; i++) {
             if (x == tail.get(i).x && y == tail.get(i).y) {
+                headColor = Color.GRAY;
                 return true;
             }
         }
@@ -64,6 +67,7 @@ public class Snake {
         // Checks if the snake's head goes beyond the window.
         if (x >= SnakeApp.APP_WIDTH || x < 0 ||
             y >= SnakeApp.APP_HEIGHT || y < 0) {
+            headColor = Color.GRAY;
             return true;
         }
         
@@ -99,13 +103,14 @@ public class Snake {
     
     // Renders the snake.
     public void render(GraphicsContext gc) {
-        // Renders snake's head.
-        gc.setFill(Color.GREEN);
-        gc.fillRect(x, y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE);
-        
         // Renders snake's tail.
+        gc.setFill(tailColor);
         for (int i = 0; i < extraLength; i++) {
             gc.fillRect(tail.get(i).x, tail.get(i).y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE);
         }
+        
+        // Renders snake's head.
+        gc.setFill(headColor);
+        gc.fillRect(x, y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE);
     }
 }

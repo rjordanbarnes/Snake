@@ -19,17 +19,36 @@ public class SnakeApp extends Application {
     public final static int APP_WIDTH = 800;
     public final static int APP_HEIGHT = 600;
     public final static int BLOCK_SIZE = 20;
-    public final static double APP_FPS = 10;
+    public final static double APP_FPS = 5;
+    // Difficulty
+    // Very easy = 1 5
+    // Easy = 2    10
+    // Normal = 3  15
+    // Hard = 4    20
+    // Very Hard = 5   25
+    public static int difficulty = 5;
 
     @Override
     public void start(Stage primaryStage) {
-        //// INITIALIZATION ////
-        
+        displayMainMenu(primaryStage);
+    }
+    
+    public void displayMainMenu(Stage primaryStage) {
+        //// MAIN MENU INITIALIZATION ////
         // Sets the title of the window
         primaryStage.setTitle("Snake");
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         
+        startGame(primaryStage);
+        
+        // Display Window
+        primaryStage.show();
+    }
+    
+    public void startGame(Stage primaryStage) {
+        //// GAME INITIALIZATION ////
+
         // Adds a group to a scene which is then added to the window.
         Group rootGroup = new Group();
         Scene scene = new Scene(rootGroup);
@@ -50,10 +69,10 @@ public class SnakeApp extends Application {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
-                    case UP:    snake.setSpeed(0, -1); break;
-                    case DOWN:  snake.setSpeed(0, 1); break;
-                    case LEFT:  snake.setSpeed(-1, 0); break;
-                    case RIGHT: snake.setSpeed(1, 0); break;
+                    case UP:    case W: snake.setSpeed(0, -1); break;
+                    case DOWN:  case S: snake.setSpeed(0, 1); break;
+                    case LEFT:  case A: snake.setSpeed(-1, 0); break;
+                    case RIGHT: case D: snake.setSpeed(1, 0); break;
                 }
             }
         });
@@ -70,7 +89,7 @@ public class SnakeApp extends Application {
                 double secondsElapsed = (currentNanoTime - startNanoTime) / 1_000_000_000.0;
                 
                 // Limits canvas refresh rate to APP_FPS
-                if (currentNanoTime - timeSinceLastUpdate >= 1 / APP_FPS * 1_000_000_000) {
+                if (currentNanoTime - timeSinceLastUpdate >= 1 / (APP_FPS * difficulty) * 1_000_000_000) {
                     // Clear canvas
                     gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
                     
@@ -81,9 +100,11 @@ public class SnakeApp extends Application {
                     // Checks if the snake is dead.
                     if (snake.isDead()) {
                         System.out.println("Dead");
+                        snake.render(gc);
+                        super.stop();
                     }
                     
-                    // Spawns new food if snake eats food.
+                    // Spawns new food if the snake eats food.
                     if (snake.eatFood(food)) {
                         food.randomLocation(snake);
                     }
@@ -95,9 +116,6 @@ public class SnakeApp extends Application {
                 }
             }
         }.start();
-        
-        // Display Window
-        primaryStage.show();
     }
 
     public static void main(String[] args) {
