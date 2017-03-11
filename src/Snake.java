@@ -36,6 +36,24 @@ public class Snake {
         }
     }
     
+    // Checks if the snake has ran into a wall or itself.
+    public boolean isDead() {
+        // Checks if the snake's head hits any part of the tail.
+        for (int i = 0; i < extraLength; i++) {
+            if (x == tail.get(i).x && y == tail.get(i).y) {
+                return true;
+            }
+        }
+        
+        // Checks if the snake's head goes beyond the window.
+        if (x >= SnakeApp.APP_WIDTH || x < 0 ||
+            y >= SnakeApp.APP_HEIGHT || y < 0) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     // Changes the snakes speed.
     public void setSpeed(int x, int y) {
         // Prevents snake from going backwards.

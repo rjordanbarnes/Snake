@@ -78,7 +78,12 @@ public class SnakeApp extends Application {
                     snake.update();
                     snake.render(gc);
                     
-                    // Spawns new food is snake eats food.
+                    // Checks if the snake is dead.
+                    if (snake.isDead()) {
+                        System.out.println("Dead");
+                    }
+                    
+                    // Spawns new food if snake eats food.
                     if (snake.eatFood(food)) {
                         food.randomLocation();
                     }
