@@ -19,7 +19,6 @@ public class Food {
         this.y = y;
     }
     
-    
     public Food() {
         randomLocation();
     }
@@ -36,8 +35,8 @@ public class Food {
     
     // Places the food at a random location on the grid.
     public void randomLocation() {
-        this.x = (int)(Math.random() * (SnakeApp.APP_WIDTH / SnakeApp.BLOCK_SIZE + 1)) * SnakeApp.BLOCK_SIZE;
-        this.y = (int)(Math.random() * (SnakeApp.APP_HEIGHT / SnakeApp.BLOCK_SIZE + 1)) * SnakeApp.BLOCK_SIZE;
+        this.x = (int)(Math.random() * (SnakeApp.APP_WIDTH / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
+        this.y = (int)(Math.random() * (SnakeApp.APP_HEIGHT / SnakeApp.BLOCK_SIZE)) * SnakeApp.BLOCK_SIZE;
     }
     
     public void render(GraphicsContext gc) {
