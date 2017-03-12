@@ -19,8 +19,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -75,9 +77,21 @@ public class SnakeApp extends Application {
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: rgb(190, 220, 145);");
         
-        // Create and style the buttons.
+        // Create and style the main menu buttons.
+        // Play Game button
         Button playGameButton = new Button("Play Game");
         playGameButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
+        
+        // Player Name input box
+        Label playerNameLabel = new Label("Name:");
+        playerNameLabel.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
+        TextField playerNameBox = new TextField();
+        playerNameBox.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
+        HBox playerNameHBox = new HBox(10);
+        playerNameHBox.setAlignment(Pos.CENTER);
+        playerNameHBox.getChildren().addAll(playerNameLabel, playerNameBox);
+        
+        // High Schores button
         Button highScoresButton = new Button("High Scores");
         highScoresButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
         
@@ -85,6 +99,8 @@ public class SnakeApp extends Application {
         try { 
             final Font generalFont = Font.loadFont(new FileInputStream(new File("./Retro Computer.TTF")), 30);
             playGameButton.setFont(generalFont);
+            playerNameLabel.setFont(generalFont);
+            playerNameBox.setFont(generalFont);
             highScoresButton.setFont(generalFont);
             
             final Font titleFont = Font.loadFont(new FileInputStream(new File("./Advanced Pixel LCD.TTF")),65);
@@ -93,13 +109,13 @@ public class SnakeApp extends Application {
             e.printStackTrace();
         }
         
-        // Add the buttons to the vbox
-        buttonBox.getChildren().addAll(mainTitle, playGameButton, highScoresButton);
+        // Add the main menu elements to the vbox
+        buttonBox.getChildren().addAll(mainTitle, playGameButton, playerNameHBox, highScoresButton);
 
-        // Applies the button box to the scene.
+        // Applies the vbox to the scene.
         primaryScene.setRoot(buttonBox);
         
-        // Button functionality
+        // Adds button functionality
         playGameButton.setOnAction(e -> startGame(primaryScene));
     }
     
@@ -116,8 +132,9 @@ public class SnakeApp extends Application {
         rootGroup.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
-        // Create snake
+        // Create snake and food entities
         Snake snake = new Snake(0, 0);
+        Food food = new Food();
         
         //// KEY HANDLING ////
         
@@ -139,7 +156,6 @@ public class SnakeApp extends Application {
         new AnimationTimer() {
             final long startNanoTime = System.nanoTime();
             private long timeSinceLastUpdate = 0;
-            Food food = new Food();
             
             @Override
             public void handle(long currentNanoTime) {

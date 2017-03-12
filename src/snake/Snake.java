@@ -86,7 +86,7 @@ public class Snake {
         }
     }
     
-    // Changes the snakes speed.
+    // Changes the snake's speed.
     public void setSpeed(int x, int y) {
         // Prevents snake from going backwards.
         if (ySpeed + y != 0 || xSpeed + x != 0) {
