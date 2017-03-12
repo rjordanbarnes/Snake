@@ -27,6 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 
 public class SnakeApp extends Application {
@@ -42,6 +43,10 @@ public class SnakeApp extends Application {
     // Difficulty
     public static int difficulty = 3;
     public final static String[] DIFFICULTIES = {"", "Very Easy", "Easy", "Normal", "Hard", "Very Hard"};
+    
+    // Score
+    public static int score = 0;
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -142,9 +147,21 @@ public class SnakeApp extends Application {
         rootGroup.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
+        // Sets the graphic context's font.
+        try { 
+            final Font generalFont = Font.loadFont(new FileInputStream(new File("./Retro Computer.TTF")), 20);
+            gc.setFont(generalFont);
+            
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
         // Create snake and food entities
         Snake snake = new Snake(0, 0);
         Food food = new Food();
+        
+        // Resets score
+        score = 0;
         
         //// KEY HANDLING ////
         
@@ -176,6 +193,9 @@ public class SnakeApp extends Application {
                     // Clear canvas
                     gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
                     
+                    // Draw score
+                    renderScore(gc);
+                    
                      // Update and draw snake
                     snake.update();
                     snake.render(gc);
@@ -184,7 +204,7 @@ public class SnakeApp extends Application {
                     if (snake.isDead()) {
                         snake.render(gc);
                         super.stop();
-                        SnakeApp.displayMainMenu(primaryScene);
+                        SnakeApp.displayEndScreen(primaryScene);
                     }
                     
                     // Spawns new food if the snake eats food.
@@ -209,6 +229,17 @@ public class SnakeApp extends Application {
             difficulty = 1;
         }
         button.setText("Difficulty: " + DIFFICULTIES[difficulty]);
+    }
+    
+    
+    public static void displayEndScreen(Scene primaryScene) {
+        displayMainMenu(primaryScene);
+    }
+    
+    public static void renderScore(GraphicsContext gc) {
+        gc.setFill(Color.rgb(0, 32, 0));
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText("" + score, APP_WIDTH / 2, 20);
     }
 
     public static void main(String[] args) {

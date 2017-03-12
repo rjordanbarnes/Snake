@@ -41,6 +41,7 @@ public class Snake {
         if (x == food.getX() && y == food.getY()) {
             extraLength++;
             tail.add(new SnakeTailSegment(x, y));
+            SnakeApp.score += SnakeApp.APP_FPS * SnakeApp.difficulty;
             return true;
         } else {
             return false;
