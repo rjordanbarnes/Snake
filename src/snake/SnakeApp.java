@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.animation.AnimationTimer;
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -26,7 +25,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 
 
 public class SnakeApp extends Application {
@@ -37,7 +35,7 @@ public class SnakeApp extends Application {
     public final static double APP_FPS = 5;
     
     // Colors
-    public final Color backgroundColor = Color.rgb(190, 220, 145);
+    public final static Color backgroundColor = Color.rgb(190, 220, 145);
     
     // Difficulty
     // Very easy = 1 5
@@ -65,7 +63,7 @@ public class SnakeApp extends Application {
         displayMainMenu(primaryScene);
     }
     
-    public void displayMainMenu(Scene primaryScene) {
+    public static void displayMainMenu(Scene primaryScene) {
         //// MAIN MENU INITIALIZATION ////
         // Main title label
         Label mainTitle = new Label("SNAKE");
@@ -76,12 +74,6 @@ public class SnakeApp extends Application {
         VBox buttonBox = new VBox(5);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: rgb(190, 220, 145);");
-        
-        // Fade the Main Menu in
-        FadeTransition ft = new FadeTransition(Duration.millis(5000), buttonBox);
-        ft.setFromValue(0);
-        ft.setToValue(1);
-        ft.play();
         
         // Create and style the buttons.
         Button playGameButton = new Button("Play Game");
@@ -111,7 +103,7 @@ public class SnakeApp extends Application {
         playGameButton.setOnAction(e -> startGame(primaryScene));
     }
     
-    public void startGame(Scene primaryScene) {
+    public static void startGame(Scene primaryScene) {
         //// GAME INITIALIZATION ////
         // Adds a group to a scene which is then added to the window.
         Group rootGroup = new Group();
@@ -166,6 +158,7 @@ public class SnakeApp extends Application {
                     if (snake.isDead()) {
                         snake.render(gc);
                         super.stop();
+                        SnakeApp.displayMainMenu(primaryScene);
                     }
                     
                     // Spawns new food if the snake eats food.
