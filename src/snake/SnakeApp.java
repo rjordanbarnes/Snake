@@ -89,20 +89,23 @@ public class SnakeApp extends Application {
         buttonBox.getChildren().addAll(mainTitle, playGameButton, highScoresButton);
 
         // Adds the vertical box to the scene which is then added to the window.
-        Scene scene = new Scene(buttonBox, APP_WIDTH, APP_HEIGHT);
-        primaryStage.setScene(scene);
+        Scene primaryScene = new Scene(buttonBox, APP_WIDTH, APP_HEIGHT);
+        primaryStage.setScene(primaryScene);
 
+        // Button functionality
+        playGameButton.setOnAction(e -> startGame(primaryScene));
+        
         // Display Window
         primaryStage.show();
     }
     
-    public void startGame(Stage primaryStage) {
+    public void startGame(Scene primaryScene) {
         //// GAME INITIALIZATION ////
-
         // Adds a group to a scene which is then added to the window.
         Group rootGroup = new Group();
-        Scene scene = new Scene(rootGroup, backgroundColor);
-        primaryStage.setScene(scene);
+        //Scene gameScene = new Scene(rootGroup, backgroundColor);
+        primaryScene.setRoot(rootGroup);
+        primaryScene.setFill(backgroundColor);
         
         // Places a canvas on the group and gets its graphic context.
         Canvas canvas = new Canvas(APP_WIDTH, APP_HEIGHT);
@@ -115,7 +118,7 @@ public class SnakeApp extends Application {
         //// KEY HANDLING ////
         
         // Sets the snake's directional speed based on key presses.
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+       primaryScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
@@ -149,7 +152,6 @@ public class SnakeApp extends Application {
                     
                     // Checks if the snake is dead.
                     if (snake.isDead()) {
-                        System.out.println("Dead");
                         snake.render(gc);
                         super.stop();
                     }
