@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -50,34 +51,47 @@ public class SnakeApp extends Application {
     
     public void displayMainMenu(Stage primaryStage) {
         //// MAIN MENU INITIALIZATION ////
+        
         // Sets the title of the window
         primaryStage.setTitle("Snake");
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         
-        // Vertical box
+        // Main title label
+        Label mainTitle = new Label("SNAKE");
+        mainTitle.setTextFill(Color.rgb(0, 32, 0));
+        mainTitle.setStyle("-fx-padding: 0 0 100px 0;");
+        
+        // Create and style the vertical box (background).
         VBox buttonBox = new VBox(5);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: rgb(190, 220, 145);");
         
-        // Buttons
+        // Create and style the buttons.
         Button playGameButton = new Button("Play Game");
-        playGameButton.setStyle("-fx-background-color: none;");
-        //playGameButton.setFont(retroComputerFont);
-        
-        
-        
+        playGameButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
         Button highScoresButton = new Button("High Scores");
+        highScoresButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
         
-        // Add buttons to the vbox
-        buttonBox.getChildren().addAll(playGameButton, highScoresButton);
+        // Load External fonts and apply them to the menu.
+        try { 
+            final Font generalFont = Font.loadFont(new FileInputStream(new File("./Retro Computer.TTF")), 30);
+            playGameButton.setFont(generalFont);
+            highScoresButton.setFont(generalFont);
+            
+            final Font titleFont = Font.loadFont(new FileInputStream(new File("./Advanced Pixel LCD.TTF")),65);
+            mainTitle.setFont(titleFont);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        // Add the buttons to the vbox
+        buttonBox.getChildren().addAll(mainTitle, playGameButton, highScoresButton);
 
         // Adds the vertical box to the scene which is then added to the window.
         Scene scene = new Scene(buttonBox, APP_WIDTH, APP_HEIGHT);
         primaryStage.setScene(scene);
-        
-        //startGame(primaryStage);
-        
+
         // Display Window
         primaryStage.show();
     }
