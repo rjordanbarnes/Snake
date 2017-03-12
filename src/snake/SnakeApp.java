@@ -40,12 +40,8 @@ public class SnakeApp extends Application {
     public final static Color backgroundColor = Color.rgb(190, 220, 145);
     
     // Difficulty
-    // Very easy = 1 5
-    // Easy = 2    10
-    // Normal = 3  15
-    // Hard = 4    20
-    // Very Hard = 5   25
     public static int difficulty = 3;
+    public final static String[] DIFFICULTIES = {"", "Very Easy", "Easy", "Normal", "Hard", "Very Hard"};
 
     @Override
     public void start(Stage primaryStage) {
@@ -65,35 +61,46 @@ public class SnakeApp extends Application {
         displayMainMenu(primaryScene);
     }
     
+    // Displays the main menu.
     public static void displayMainMenu(Scene primaryScene) {
         //// MAIN MENU INITIALIZATION ////
         // Main title label
         Label mainTitle = new Label("SNAKE");
         mainTitle.setTextFill(Color.rgb(0, 32, 0));
-        mainTitle.setStyle("-fx-padding: 0 0 100px 0;");
+        mainTitle.setStyle("-fx-padding: 0 0 55px 220px;");
         
         // Create and style the vertical box (background).
-        VBox buttonBox = new VBox(5);
-        buttonBox.setAlignment(Pos.CENTER);
+        VBox buttonBox = new VBox(-15);
+        buttonBox.setAlignment(Pos.CENTER_LEFT);
         buttonBox.setStyle("-fx-background-color: rgb(190, 220, 145);");
         
         // Create and style the main menu buttons.
         // Play Game button
         Button playGameButton = new Button("Play Game");
-        playGameButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
+        playGameButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
+                              + "-fx-padding: 0 0 0 240px;");
         
         // Player Name input box
         Label playerNameLabel = new Label("Name:");
-        playerNameLabel.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
-        TextField playerNameBox = new TextField();
+        playerNameLabel.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
+                               + "-fx-padding: 0 0 0 20px;");
+        TextField playerNameBox = new TextField("Player");
         playerNameBox.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
-        HBox playerNameHBox = new HBox(10);
-        playerNameHBox.setAlignment(Pos.CENTER);
+        HBox playerNameHBox = new HBox();
+        playerNameHBox.setAlignment(Pos.CENTER_LEFT);
+        playerNameHBox.setStyle("-fx-padding: 0 0 0 220px;");
+        
         playerNameHBox.getChildren().addAll(playerNameLabel, playerNameBox);
+        
+        // Difficulty button
+        Button difficultyButton = new Button("Difficulty: " + DIFFICULTIES[difficulty]);
+        difficultyButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
+                                + "-fx-padding: 0 0 0 240px;");
         
         // High Schores button
         Button highScoresButton = new Button("High Scores");
-        highScoresButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
+        highScoresButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
+                                + "-fx-padding: 30px 0 0 240px;");
         
         // Load External fonts and apply them to the menu.
         try { 
@@ -101,6 +108,7 @@ public class SnakeApp extends Application {
             playGameButton.setFont(generalFont);
             playerNameLabel.setFont(generalFont);
             playerNameBox.setFont(generalFont);
+            difficultyButton.setFont(generalFont);
             highScoresButton.setFont(generalFont);
             
             final Font titleFont = Font.loadFont(new FileInputStream(new File("./Advanced Pixel LCD.TTF")),65);
@@ -110,15 +118,17 @@ public class SnakeApp extends Application {
         }
         
         // Add the main menu elements to the vbox
-        buttonBox.getChildren().addAll(mainTitle, playGameButton, playerNameHBox, highScoresButton);
+        buttonBox.getChildren().addAll(mainTitle, playGameButton, playerNameHBox, difficultyButton, highScoresButton);
 
         // Applies the vbox to the scene.
         primaryScene.setRoot(buttonBox);
         
         // Adds button functionality
         playGameButton.setOnAction(e -> startGame(primaryScene));
+        difficultyButton.setOnAction(e -> changeDifficulty(difficultyButton));
     }
     
+    // Starts the main game.
     public static void startGame(Scene primaryScene) {
         //// GAME INITIALIZATION ////
         // Adds a group to a scene which is then added to the window.
@@ -189,6 +199,16 @@ public class SnakeApp extends Application {
                 }
             }
         }.start();
+    }
+    
+    // Changes the game's difficulty level.
+    public static void changeDifficulty(Button button) {
+        if (difficulty < 5) {
+            difficulty++;
+        } else {
+            difficulty = 1;
+        }
+        button.setText("Difficulty: " + DIFFICULTIES[difficulty]);
     }
 
     public static void main(String[] args) {
