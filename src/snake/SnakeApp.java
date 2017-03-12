@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -21,9 +22,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 
 public class SnakeApp extends Application {
@@ -46,17 +49,24 @@ public class SnakeApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        displayMainMenu(primaryStage);
-    }
-    
-    public void displayMainMenu(Stage primaryStage) {
-        //// MAIN MENU INITIALIZATION ////
-        
         // Sets the title of the window
         primaryStage.setTitle("Snake");
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
+
+        // Creates the first blank pane to display
+        Pane intro = new Pane();
+        intro.setStyle("-fx-background-color: rgb(190, 220, 145);");
+        Scene primaryScene = new Scene(intro, APP_WIDTH, APP_HEIGHT, backgroundColor);
         
+        // Sets the scene and displays the main menu.
+        primaryStage.setScene(primaryScene);
+        primaryStage.show();
+        displayMainMenu(primaryScene);
+    }
+    
+    public void displayMainMenu(Scene primaryScene) {
+        //// MAIN MENU INITIALIZATION ////
         // Main title label
         Label mainTitle = new Label("SNAKE");
         mainTitle.setTextFill(Color.rgb(0, 32, 0));
@@ -66,6 +76,12 @@ public class SnakeApp extends Application {
         VBox buttonBox = new VBox(5);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setStyle("-fx-background-color: rgb(190, 220, 145);");
+        
+        // Fade the Main Menu in
+        FadeTransition ft = new FadeTransition(Duration.millis(5000), buttonBox);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
         
         // Create and style the buttons.
         Button playGameButton = new Button("Play Game");
@@ -88,15 +104,11 @@ public class SnakeApp extends Application {
         // Add the buttons to the vbox
         buttonBox.getChildren().addAll(mainTitle, playGameButton, highScoresButton);
 
-        // Adds the vertical box to the scene which is then added to the window.
-        Scene primaryScene = new Scene(buttonBox, APP_WIDTH, APP_HEIGHT);
-        primaryStage.setScene(primaryScene);
-
+        // Applies the button box to the scene.
+        primaryScene.setRoot(buttonBox);
+        
         // Button functionality
         playGameButton.setOnAction(e -> startGame(primaryScene));
-        
-        // Display Window
-        primaryStage.show();
     }
     
     public void startGame(Scene primaryScene) {
