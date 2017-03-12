@@ -1,3 +1,5 @@
+package snake;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -13,6 +15,7 @@ import javafx.scene.paint.Color;
  */
 public class Food {
     private int x, y;
+    private Color foodColor = Color.rgb(199, 131, 163);
     
     // Creates Food with specific location.
     public Food(int x, int y) {
@@ -68,7 +71,7 @@ public class Food {
     
     // Renders the food.
     public void render(GraphicsContext gc) {
-        gc.setFill(Color.PINK);
-        gc.fillRect(x, y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE);
+        gc.setFill(foodColor);
+        gc.fillRoundRect(x, y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE, 10, 10);
     }
 }

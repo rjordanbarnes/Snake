@@ -1,32 +1,47 @@
+package snake;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 
 public class SnakeApp extends Application {
+    // Window size and FPS constants
     public final static int APP_WIDTH = 800;
     public final static int APP_HEIGHT = 600;
     public final static int BLOCK_SIZE = 20;
     public final static double APP_FPS = 5;
+    
+    // Colors
+    public final Color backgroundColor = Color.rgb(190, 220, 145);
+    
     // Difficulty
     // Very easy = 1 5
     // Easy = 2    10
     // Normal = 3  15
     // Hard = 4    20
     // Very Hard = 5   25
-    public static int difficulty = 5;
+    public static int difficulty = 3;
 
     @Override
     public void start(Stage primaryStage) {
@@ -40,7 +55,28 @@ public class SnakeApp extends Application {
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         
-        startGame(primaryStage);
+        // Vertical box
+        VBox buttonBox = new VBox(5);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setStyle("-fx-background-color: rgb(190, 220, 145);");
+        
+        // Buttons
+        Button playGameButton = new Button("Play Game");
+        playGameButton.setStyle("-fx-background-color: none;");
+        //playGameButton.setFont(retroComputerFont);
+        
+        
+        
+        Button highScoresButton = new Button("High Scores");
+        
+        // Add buttons to the vbox
+        buttonBox.getChildren().addAll(playGameButton, highScoresButton);
+
+        // Adds the vertical box to the scene which is then added to the window.
+        Scene scene = new Scene(buttonBox, APP_WIDTH, APP_HEIGHT);
+        primaryStage.setScene(scene);
+        
+        //startGame(primaryStage);
         
         // Display Window
         primaryStage.show();
@@ -51,7 +87,7 @@ public class SnakeApp extends Application {
 
         // Adds a group to a scene which is then added to the window.
         Group rootGroup = new Group();
-        Scene scene = new Scene(rootGroup);
+        Scene scene = new Scene(rootGroup, backgroundColor);
         primaryStage.setScene(scene);
         
         // Places a canvas on the group and gets its graphic context.

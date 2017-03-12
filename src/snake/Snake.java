@@ -1,3 +1,5 @@
+package snake;
+
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -13,15 +15,21 @@ import javafx.scene.paint.Color;
  * @author Jordan
  */
 public class Snake {
+    // Positioning
     private int x, y;
     private int xSpeed, ySpeed;
-    private int extraLength = 0;
-    private Color headColor = Color.GREEN;
-    private Color tailColor = Color.GREEN;
+    
+    // Colors
+    private Color headColor = Color.rgb(0, 32, 0);
+    private Color tailColor = Color.rgb(0, 32, 0);
+    private Color deadColor = Color.rgb(70, 10, 10);
+    
     // Tail array that tracks the snake's tail segments. The end of the tail
     // is at the end of the array.
     private ArrayList<SnakeTailSegment> tail = new ArrayList<SnakeTailSegment>();
+    private int extraLength = 0;
     
+    // Creates a snake with a specific x and y coordinate.
     public Snake(int x, int y) {
         this.x = x;
         this.y = y;
@@ -56,22 +64,26 @@ public class Snake {
     
     // Checks if the snake has ran into a wall or itself.
     public boolean isDead() {
+        boolean isDead = false;
         // Checks if the snake's head hits any part of the tail.
         for (int i = 0; i < extraLength; i++) {
             if (x == tail.get(i).x && y == tail.get(i).y) {
-                headColor = Color.GRAY;
-                return true;
+                isDead = true;
             }
         }
         
         // Checks if the snake's head goes beyond the window.
         if (x >= SnakeApp.APP_WIDTH || x < 0 ||
             y >= SnakeApp.APP_HEIGHT || y < 0) {
-            headColor = Color.GRAY;
-            return true;
+            isDead = true;
         }
         
-        return false;
+        if (isDead) {
+            headColor = deadColor;
+            return true;
+        } else {
+            return false;
+        }
     }
     
     // Changes the snakes speed.
@@ -106,11 +118,11 @@ public class Snake {
         // Renders snake's tail.
         gc.setFill(tailColor);
         for (int i = 0; i < extraLength; i++) {
-            gc.fillRect(tail.get(i).x, tail.get(i).y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE);
+            gc.fillRoundRect(tail.get(i).x, tail.get(i).y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE, 10, 10);
         }
         
         // Renders snake's head.
         gc.setFill(headColor);
-        gc.fillRect(x, y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE);
+        gc.fillRoundRect(x, y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE, 10, 10);
     }
 }
