@@ -109,14 +109,14 @@ public class SnakeApp extends Application {
         
         // Load External fonts and apply them to the menu.
         try { 
-            final Font generalFont = Font.loadFont(new FileInputStream(new File("./Retro Computer.TTF")), 30);
+            final Font generalFont = Font.loadFont(new FileInputStream(new File("./fonts/Retro Computer.TTF")), 30);
             playGameButton.setFont(generalFont);
             playerNameLabel.setFont(generalFont);
             playerNameBox.setFont(generalFont);
             difficultyButton.setFont(generalFont);
             highScoresButton.setFont(generalFont);
             
-            final Font titleFont = Font.loadFont(new FileInputStream(new File("./Advanced Pixel LCD.TTF")),65);
+            final Font titleFont = Font.loadFont(new FileInputStream(new File("./fonts/Advanced Pixel LCD.TTF")),65);
             mainTitle.setFont(titleFont);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -149,9 +149,8 @@ public class SnakeApp extends Application {
         
         // Sets the graphic context's font.
         try { 
-            final Font generalFont = Font.loadFont(new FileInputStream(new File("./Retro Computer.TTF")), 20);
+            final Font generalFont = Font.loadFont(new FileInputStream(new File("./fonts/Retro Computer.TTF")), 20);
             gc.setFont(generalFont);
-            
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
