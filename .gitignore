@@ -50,3 +50,4 @@ dist/
 nbdist/
 test/
 nbproject/private/
+scores.txt

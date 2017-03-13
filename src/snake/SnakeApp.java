@@ -6,11 +6,11 @@ package snake;
  * and open the template in the editor.
  */
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javafx.animation.AnimationTimer;
@@ -93,13 +93,15 @@ public class SnakeApp extends Application {
             // Get high scores from file.
             Scanner input = new Scanner(highScoreFile);
             for (int i = 0; i < 10; i ++) {
-                String playerName = input.next();
-                int playerScore = input.nextInt();
-                highScores.add(new ScoreEntry(playerName, playerScore));
+                String tempPlayerName = input.next();
+                int tempPlayerScore = input.nextInt();
+                highScores.add(new ScoreEntry(tempPlayerName, tempPlayerScore));
             }
+            // Close file
+            input.close();
         } catch (FileNotFoundException e) {
             for (int i = 0; i < 10; i ++) {
-                highScores.add(new ScoreEntry("Unable to Load", 0));
+                highScores.add(new ScoreEntry("Developer", 100));
             }
             e.printStackTrace();
         }
@@ -334,7 +336,31 @@ public class SnakeApp extends Application {
         menuButton.setTranslateX(430);
         menuButton.setTranslateY(300);
 
+        // Add items to screen.
         group.getChildren().addAll(backgroundRect, finalScore, retryButton, menuButton);
+        
+        // Adds new high score.
+        for (int i = 0; i < 10; i++) {
+            if (currentScore > highScores.get(i).getScore()) {
+                highScores.add(i, new ScoreEntry(playerName, currentScore));
+                highScores.remove(10);
+                break;
+            }
+        }
+        
+        // Writes high scores to text file.
+        try {
+            FileWriter highScoreWriter = new FileWriter(highScoreFile, false);
+            for (int i = 0; i < 10; i++) {
+                String tempPlayerName = highScores.get(i).getName();
+                int tempPlayerScore = highScores.get(i).getScore();
+                highScoreWriter.write(tempPlayerName + " " + tempPlayerScore + "\n" );
+            }
+            // Close file
+            highScoreWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
         // Adds button functionality
         retryButton.setOnAction(e -> startGame(primaryScene));
