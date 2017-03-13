@@ -239,15 +239,10 @@ public class SnakeApp extends Application {
                     // Clear canvas
                     gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
                     
-                    // Spawns new food if the snake eats food.
-                    if (snake.eatFood(food)) {
-                        food.randomLocation(snake);
-                    }
-
                      // Update and draw snake
                     snake.update();
                     snake.render(gc);
-
+                    
                     // Checks if the snake is dead.
                     if (snake.isDead()) {
                         // Stop the game loop and display the end screen.
@@ -257,6 +252,11 @@ public class SnakeApp extends Application {
                     } else {
                         // Draw score if the snake is alive.
                         renderScore(gc);
+                    }
+                    
+                    // Spawns new food if the snake eats food.
+                    if (snake.eatFood(food)) {
+                        food.randomLocation(snake);
                     }
                     
                     // Draw food
