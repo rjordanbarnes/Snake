@@ -21,8 +21,8 @@ public class Snake {
     
     // Colors
     private Color headColor = Color.rgb(0, 32, 0);
-    private Color tailColor = Color.rgb(0, 32, 0);
-    private Color deadColor = Color.rgb(70, 10, 10);
+    private final Color TAIL_COLOR = Color.rgb(0, 32, 0);
+    private final Color DEAD_COLOR = Color.rgb(70, 10, 10);
     
     // Tail array that tracks the snake's tail segments. The end of the tail
     // is at the end of the array.
@@ -41,7 +41,7 @@ public class Snake {
         if (x == food.getX() && y == food.getY()) {
             extraLength++;
             tail.add(new SnakeTailSegment(x, y));
-            SnakeApp.score += SnakeApp.APP_FPS * SnakeApp.difficulty;
+            SnakeApp.currentScore += SnakeApp.APP_FPS * SnakeApp.difficulty;
             return true;
         } else {
             return false;
@@ -80,7 +80,7 @@ public class Snake {
         }
         
         if (isDead) {
-            headColor = deadColor;
+            headColor = DEAD_COLOR;
             return true;
         } else {
             return false;
@@ -117,7 +117,7 @@ public class Snake {
     // Renders the snake.
     public void render(GraphicsContext gc) {
         // Renders snake's tail.
-        gc.setFill(tailColor);
+        gc.setFill(TAIL_COLOR);
         for (int i = 0; i < extraLength; i++) {
             gc.fillRoundRect(tail.get(i).x, tail.get(i).y, SnakeApp.BLOCK_SIZE, SnakeApp.BLOCK_SIZE, 10, 10);
         }

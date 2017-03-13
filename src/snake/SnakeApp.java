@@ -6,9 +6,13 @@ package snake;
  * and open the template in the editor.
  */
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Scanner;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -33,6 +37,7 @@ import javafx.scene.text.TextAlignment;
 
 
 public class SnakeApp extends Application {
+    //// STATIC VARIABLES ////
     // Window size and FPS constants
     public final static int APP_WIDTH = 800;
     public final static int APP_HEIGHT = 600;
@@ -44,30 +49,58 @@ public class SnakeApp extends Application {
     
     // Fonts
     public static Font generalFont = new Font(30);
-    public static Font titleFont = new Font(65);
+    public static Font titleFont = new Font(80);
     
     // Difficulty
     public static int difficulty = 3;
     public final static String[] DIFFICULTIES = {"", "Very Easy", "Easy", "Normal", "Hard", "Very Hard"};
     
     // Score
-    public static int score = 0;
+    public static int currentScore = 0;
     
     // Player Name
     public static String playerName = "Player";
+    
+    // High Scores
+    public static ArrayList<ScoreEntry> highScores = new ArrayList<ScoreEntry>();
+    
+    
+    //// FILES ////
+    // Font files
+    public static File generalFontFile = new File("./fonts/Retro Computer.TTF");
+    public static File titleFontFile = new File("./fonts/Advanced Pixel LCD.TTF");
+    
+    // High Score file
+    public static File highScoreFile = new File("./scores.txt");
 
+    
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage){
         // Sets the title of the window
         primaryStage.setTitle("Snake");
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         
-        // Load External fonts.
+        // Load external fonts.
         try { 
-            generalFont = Font.loadFont(new FileInputStream(new File("./fonts/Retro Computer.TTF")), 30);
-            titleFont = Font.loadFont(new FileInputStream(new File("./fonts/Advanced Pixel LCD.TTF")), 65);
+            generalFont = Font.loadFont(new FileInputStream(generalFontFile), 30);
+            titleFont = Font.loadFont(new FileInputStream(titleFontFile), 65);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            // Get high scores from file.
+            Scanner input = new Scanner(highScoreFile);
+            for (int i = 0; i < 10; i ++) {
+                String playerName = input.next();
+                int playerScore = input.nextInt();
+                highScores.add(new ScoreEntry(playerName, playerScore));
+            }
+        } catch (FileNotFoundException e) {
+            for (int i = 0; i < 10; i ++) {
+                highScores.add(new ScoreEntry("Unable to Load", 0));
+            }
             e.printStackTrace();
         }
 
@@ -88,7 +121,7 @@ public class SnakeApp extends Application {
         // Main title label
         Label mainTitle = new Label("SNAKE");
         mainTitle.setTextFill(Color.rgb(0, 32, 0));
-        mainTitle.setStyle("-fx-padding: 0 0 55px 220px;");
+        mainTitle.setStyle("-fx-padding: 0 0 55px 210px;");
         
         // Create and style the vertical box (background).
         VBox buttonBox = new VBox(-15);
@@ -146,6 +179,7 @@ public class SnakeApp extends Application {
             }
         });
         difficultyButton.setOnAction(e -> changeDifficulty(difficultyButton));
+        highScoresButton.setOnAction(e -> displayHighScores(primaryScene));
     }
     
     // Starts the main game.
@@ -170,7 +204,7 @@ public class SnakeApp extends Application {
         Food food = new Food();
         
         // Resets score
-        score = 0;
+        currentScore = 0;
         
         //// KEY HANDLING ////
         
@@ -198,7 +232,7 @@ public class SnakeApp extends Application {
             public void handle(long currentNanoTime) {
                 double secondsElapsed = (currentNanoTime - startNanoTime) / 1_000_000_000.0;
                 
-                // Limits canvas refresh rate to APP_FPS
+                // Limits canvas refresh rate to APP_FPS times difficulty modifier
                 if (currentNanoTime - timeSinceLastUpdate >= 1 / (APP_FPS * difficulty) * 1_000_000_000) {
                     // Clear canvas
                     gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
@@ -215,6 +249,7 @@ public class SnakeApp extends Application {
                     // Checks if the snake is dead.
                     if (snake.isDead()) {
                         // Stop the game loop and display the end screen.
+                        snake.render(gc);
                         super.stop();
                         SnakeApp.displayEndScreen(rootGroup, primaryScene);
                     } else {
@@ -241,6 +276,34 @@ public class SnakeApp extends Application {
         button.setText("Difficulty: " + DIFFICULTIES[difficulty]);
     }
     
+    public static void displayHighScores(Scene primaryScene) {
+        //// HIGH SCORES SCREEN INITIALIZATION ////
+        // Create and style the vertical box (background).
+        VBox scoresBox = new VBox();
+        scoresBox.setAlignment(Pos.CENTER);
+        scoresBox.setStyle("-fx-background-color: rgb(190, 220, 145);");
+        
+        // Add each high schore label to the vbox
+        for (int i = 0; i < 10; i ++) {
+            scoresBox.getChildren().add(highScores.get(i).getLabel());
+        }
+
+        // Create the return button.
+        Button returnButton = new Button("Return to Main Menu");
+        returnButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
+                              + "-fx-padding: 30px 0 0 0;");
+        returnButton.setFont(generalFont);
+        
+        // Add the return button to the vbox
+        scoresBox.getChildren().add(returnButton);
+        
+        // Applies the vbox to the scene.
+        primaryScene.setRoot(scoresBox);
+        
+        // Add functionality to return button
+        returnButton.setOnAction(e -> displayMainMenu(primaryScene));
+    }
+    
     // Displays the end screen when the snake dies.
     public static void displayEndScreen(Group group, Scene primaryScene) {
         // Background rectangle
@@ -250,10 +313,10 @@ public class SnakeApp extends Application {
         backgroundRect.setFill(BACKGROUND_COLOR);
         
         // Display score
-        Label finalScore = new Label("Score: " + score);
+        Label finalScore = new Label("Score: " + currentScore);
         finalScore.setFont(generalFont);
         finalScore.setStyle("-fx-text-fill: rgb(0, 32, 0);");
-        int scoreLength = String.valueOf(score).length();
+        int scoreLength = String.valueOf(currentScore).length();
         finalScore.setTranslateX(335 - (scoreLength * 15));
         finalScore.setTranslateY(240);
         
@@ -276,18 +339,12 @@ public class SnakeApp extends Application {
         // Adds button functionality
         retryButton.setOnAction(e -> startGame(primaryScene));
         menuButton.setOnAction(e -> displayMainMenu(primaryScene));
-        
-        //Button playGameButton = new Button("Play Game");
-        //group.getChildren().add(playGameButton);
-        //playGameButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
-        //primaryScene.setRoot(playGameButton);
-        //displayMainMenu(primaryScene);
     }
     
     public static void renderScore(GraphicsContext gc) {
         gc.setFill(Color.rgb(0, 32, 0));
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("" + score, APP_WIDTH / 2, 25);
+        gc.fillText("" + currentScore, APP_WIDTH / 2, 25);
     }
 
     public static void main(String[] args) {
