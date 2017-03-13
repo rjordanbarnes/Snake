@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -51,7 +52,9 @@ public class SnakeApp extends Application {
     
     // Score
     public static int score = 0;
-
+    
+    // Player Name
+    public static String playerName = "Player";
 
     @Override
     public void start(Stage primaryStage) {
@@ -102,7 +105,7 @@ public class SnakeApp extends Application {
         Label playerNameLabel = new Label("Name:");
         playerNameLabel.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
                                + "-fx-padding: 0 0 0 20px;");
-        TextField playerNameBox = new TextField("Player");
+        TextField playerNameBox = new TextField(playerName);
         playerNameBox.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
         HBox playerNameHBox = new HBox();
         playerNameHBox.setAlignment(Pos.CENTER_LEFT);
@@ -135,7 +138,13 @@ public class SnakeApp extends Application {
         primaryScene.setRoot(buttonBox);
         
         // Adds button functionality
-        playGameButton.setOnAction(e -> startGame(primaryScene));
+        playGameButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override 
+            public void handle(ActionEvent e) {
+                playerName = playerNameBox.getText();
+                startGame(primaryScene);
+            }
+        });
         difficultyButton.setOnAction(e -> changeDifficulty(difficultyButton));
     }
     
