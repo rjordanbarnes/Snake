@@ -244,7 +244,8 @@ public class SnakeApp extends Application {
         Label finalScore = new Label("Score: " + score);
         finalScore.setFont(generalFont);
         finalScore.setStyle("-fx-text-fill: rgb(0, 32, 0);");
-        finalScore.setTranslateX(300);
+        int scoreLength = String.valueOf(score).length();
+        finalScore.setTranslateX(335 - (scoreLength * 15));
         finalScore.setTranslateY(240);
         
         // Display retry button
