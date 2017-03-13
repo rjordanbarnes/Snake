@@ -26,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -38,7 +39,11 @@ public class SnakeApp extends Application {
     public final static double APP_FPS = 5;
     
     // Colors
-    public final static Color backgroundColor = Color.rgb(190, 220, 145);
+    public final static Color BACKGROUND_COLOR = Color.rgb(190, 220, 145);
+    
+    // Fonts
+    public static Font generalFont = new Font(30);
+    public static Font titleFont = new Font(65);
     
     // Difficulty
     public static int difficulty = 3;
@@ -54,11 +59,19 @@ public class SnakeApp extends Application {
         primaryStage.setTitle("Snake");
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
+        
+        // Load External fonts.
+        try { 
+            generalFont = Font.loadFont(new FileInputStream(new File("./fonts/Retro Computer.TTF")), 30);
+            titleFont = Font.loadFont(new FileInputStream(new File("./fonts/Advanced Pixel LCD.TTF")), 65);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // Creates the first blank pane to display
         Pane intro = new Pane();
         intro.setStyle("-fx-background-color: rgb(190, 220, 145);");
-        Scene primaryScene = new Scene(intro, APP_WIDTH, APP_HEIGHT, backgroundColor);
+        Scene primaryScene = new Scene(intro, APP_WIDTH, APP_HEIGHT, BACKGROUND_COLOR);
         
         // Sets the scene and displays the main menu.
         primaryStage.setScene(primaryScene);
@@ -106,21 +119,14 @@ public class SnakeApp extends Application {
         Button highScoresButton = new Button("High Scores");
         highScoresButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
                                 + "-fx-padding: 30px 0 0 240px;");
-        
-        // Load External fonts and apply them to the menu.
-        try { 
-            final Font generalFont = Font.loadFont(new FileInputStream(new File("./fonts/Retro Computer.TTF")), 30);
-            playGameButton.setFont(generalFont);
-            playerNameLabel.setFont(generalFont);
-            playerNameBox.setFont(generalFont);
-            difficultyButton.setFont(generalFont);
-            highScoresButton.setFont(generalFont);
-            
-            final Font titleFont = Font.loadFont(new FileInputStream(new File("./fonts/Advanced Pixel LCD.TTF")),65);
-            mainTitle.setFont(titleFont);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        // Set fonts
+        playGameButton.setFont(generalFont);
+        playerNameLabel.setFont(generalFont);
+        playerNameBox.setFont(generalFont);
+        difficultyButton.setFont(generalFont);
+        highScoresButton.setFont(generalFont);
+        mainTitle.setFont(titleFont);
         
         // Add the main menu elements to the vbox
         buttonBox.getChildren().addAll(mainTitle, playGameButton, playerNameHBox, difficultyButton, highScoresButton);
@@ -138,9 +144,9 @@ public class SnakeApp extends Application {
         //// GAME INITIALIZATION ////
         // Adds a group to a scene which is then added to the window.
         Group rootGroup = new Group();
-        //Scene gameScene = new Scene(rootGroup, backgroundColor);
+        //Scene gameScene = new Scene(rootGroup, BACKGROUND_COLOR);
         primaryScene.setRoot(rootGroup);
-        primaryScene.setFill(backgroundColor);
+        primaryScene.setFill(BACKGROUND_COLOR);
         
         // Places a canvas on the group and gets its graphic context.
         Canvas canvas = new Canvas(APP_WIDTH, APP_HEIGHT);
@@ -148,12 +154,7 @@ public class SnakeApp extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
         // Sets the graphic context's font.
-        try { 
-            final Font generalFont = Font.loadFont(new FileInputStream(new File("./fonts/Retro Computer.TTF")), 20);
-            gc.setFont(generalFont);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        gc.setFont(generalFont);
         
         // Create snake and food entities
         Snake snake = new Snake(0, 0);
@@ -180,6 +181,7 @@ public class SnakeApp extends Application {
         //// GAME LOOP ////
 
         new AnimationTimer() {
+            // Variables used to limit refresh rate.
             final long startNanoTime = System.nanoTime();
             private long timeSinceLastUpdate = 0;
             
@@ -192,23 +194,23 @@ public class SnakeApp extends Application {
                     // Clear canvas
                     gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
                     
-                    // Draw score
-                    renderScore(gc);
-                    
-                     // Update and draw snake
-                    snake.update();
-                    snake.render(gc);
-                    
-                    // Checks if the snake is dead.
-                    if (snake.isDead()) {
-                        snake.render(gc);
-                        super.stop();
-                        SnakeApp.displayEndScreen(primaryScene);
-                    }
-                    
                     // Spawns new food if the snake eats food.
                     if (snake.eatFood(food)) {
                         food.randomLocation(snake);
+                    }
+
+                     // Update and draw snake
+                    snake.update();
+                    snake.render(gc);
+
+                    // Checks if the snake is dead.
+                    if (snake.isDead()) {
+                        // Stop the game loop and display the end screen.
+                        super.stop();
+                        SnakeApp.displayEndScreen(rootGroup, primaryScene);
+                    } else {
+                        // Draw score if the snake is alive.
+                        renderScore(gc);
                     }
                     
                     // Draw food
@@ -230,15 +232,52 @@ public class SnakeApp extends Application {
         button.setText("Difficulty: " + DIFFICULTIES[difficulty]);
     }
     
-    
-    public static void displayEndScreen(Scene primaryScene) {
-        displayMainMenu(primaryScene);
+    // Displays the end screen when the snake dies.
+    public static void displayEndScreen(Group group, Scene primaryScene) {
+        // Background rectangle
+        Rectangle backgroundRect = new Rectangle(APP_WIDTH / 2 - (380 / 2), APP_HEIGHT / 2 - (160 / 2), 380, 160);
+        backgroundRect.setStroke(Color.rgb(0, 32, 0));
+        backgroundRect.setStrokeWidth(3);
+        backgroundRect.setFill(BACKGROUND_COLOR);
+        
+        // Display score
+        Label finalScore = new Label("Score: " + score);
+        finalScore.setFont(generalFont);
+        finalScore.setStyle("-fx-text-fill: rgb(0, 32, 0);");
+        finalScore.setTranslateX(300);
+        finalScore.setTranslateY(240);
+        
+        // Display retry button
+        Button retryButton = new Button("Retry");
+        retryButton.setFont(generalFont);
+        retryButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
+        retryButton.setTranslateX(220);
+        retryButton.setTranslateY(300);
+        
+        // Display menu button
+        Button menuButton = new Button("Menu");
+        menuButton.setFont(generalFont);
+        menuButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
+        menuButton.setTranslateX(430);
+        menuButton.setTranslateY(300);
+
+        group.getChildren().addAll(backgroundRect, finalScore, retryButton, menuButton);
+        
+        // Adds button functionality
+        retryButton.setOnAction(e -> startGame(primaryScene));
+        menuButton.setOnAction(e -> displayMainMenu(primaryScene));
+        
+        //Button playGameButton = new Button("Play Game");
+        //group.getChildren().add(playGameButton);
+        //playGameButton.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);"
+        //primaryScene.setRoot(playGameButton);
+        //displayMainMenu(primaryScene);
     }
     
     public static void renderScore(GraphicsContext gc) {
         gc.setFill(Color.rgb(0, 32, 0));
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("" + score, APP_WIDTH / 2, 20);
+        gc.fillText("" + score, APP_WIDTH / 2, 25);
     }
 
     public static void main(String[] args) {
