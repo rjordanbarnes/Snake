@@ -210,16 +210,14 @@ public class SnakeApp extends Application {
         
         //// KEY HANDLING ////
         
-        // Sets the snake's directional speed based on key presses.
+        //Array of inputs to be read in the game loop.
+        ArrayList<KeyEvent> inputs = new ArrayList<KeyEvent>();
+        
+        // Add input to input array to be read later.
        primaryScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case UP:    case W: snake.setSpeed(0, -1); break;
-                    case DOWN:  case S: snake.setSpeed(0, 1); break;
-                    case LEFT:  case A: snake.setSpeed(-1, 0); break;
-                    case RIGHT: case D: snake.setSpeed(1, 0); break;
-                }
+                inputs.add(event);
             }
         });
         
@@ -236,12 +234,24 @@ public class SnakeApp extends Application {
                 
                 // Limits canvas refresh rate to APP_FPS times difficulty modifier
                 if (currentNanoTime - timeSinceLastUpdate >= 1 / (APP_FPS * difficulty) * 1_000_000_000) {
-                    // Clear canvas
-                    gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
                     
-                     // Update and draw snake
+                    //// USER INPUT ////
+                    // Limits input to one input per frame.
+                    if (inputs.size() > 0) {
+                        KeyEvent currentEvent = inputs.get(0);
+                        switch (currentEvent.getCode()) {
+                            case UP:    case W: snake.setSpeed(0, -1); break;
+                            case DOWN:  case S: snake.setSpeed(0, 1); break;
+                            case LEFT:  case A: snake.setSpeed(-1, 0); break;
+                            case RIGHT: case D: snake.setSpeed(1, 0); break;
+                        }
+                        inputs.remove(0);
+                    }
+                    
+                    
+                    //// UPDATE ////
+                    // Update and draw snake
                     snake.update();
-                    snake.render(gc);
                     
                     // Checks if the snake is dead.
                     if (snake.isDead()) {
@@ -258,8 +268,12 @@ public class SnakeApp extends Application {
                     if (snake.eatFood(food)) {
                         food.randomLocation(snake);
                     }
+                            
                     
-                    // Draw food
+                    //// RENDER ////
+                    // Clear canvas
+                    gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
+                    snake.render(gc);
                     food.render(gc);
                     
                     timeSinceLastUpdate = currentNanoTime;
