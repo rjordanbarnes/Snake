@@ -18,6 +18,7 @@ public class Snake {
     // Positioning
     private int x, y;
     private int xSpeed, ySpeed;
+    private boolean isDead = false;
     
     // Colors
     private Color headColor = Color.rgb(0, 32, 0);
@@ -65,7 +66,6 @@ public class Snake {
     
     // Checks if the snake has ran into a wall or itself.
     public boolean isDead() {
-        boolean isDead = false;
         // Checks if the snake's head hits any part of the tail.
         for (int i = 0; i < extraLength; i++) {
             if (x == tail.get(i).x && y == tail.get(i).y) {

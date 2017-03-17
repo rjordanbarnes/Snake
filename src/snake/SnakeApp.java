@@ -176,7 +176,7 @@ public class SnakeApp extends Application {
         playGameButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-                playerName = playerNameBox.getText().replaceAll("\\s+","");;
+                playerName = playerNameBox.getText().replaceAll("\\s+","");
                 startGame(primaryScene);
             }
         });
@@ -189,7 +189,6 @@ public class SnakeApp extends Application {
         //// GAME INITIALIZATION ////
         // Adds a group to a scene which is then added to the window.
         Group rootGroup = new Group();
-        //Scene gameScene = new Scene(rootGroup, BACKGROUND_COLOR);
         primaryScene.setRoot(rootGroup);
         primaryScene.setFill(BACKGROUND_COLOR);
         
@@ -260,6 +259,8 @@ public class SnakeApp extends Application {
                         super.stop();
                         SnakeApp.displayEndScreen(rootGroup, primaryScene);
                     } else {
+                        // Clear canvas
+                        gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
                         // Draw score if the snake is alive.
                         renderScore(gc);
                     }
@@ -271,8 +272,7 @@ public class SnakeApp extends Application {
                             
                     
                     //// RENDER ////
-                    // Clear canvas
-                    gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
+                    
                     snake.render(gc);
                     food.render(gc);
                     
