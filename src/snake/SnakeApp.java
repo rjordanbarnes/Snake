@@ -176,7 +176,7 @@ public class SnakeApp extends Application {
         playGameButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-                playerName = playerNameBox.getText();
+                playerName = playerNameBox.getText().replaceAll("\\s+","");;
                 startGame(primaryScene);
             }
         });
