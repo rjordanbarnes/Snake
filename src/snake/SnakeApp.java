@@ -1,11 +1,5 @@
 package snake;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,7 +28,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-
 
 public class SnakeApp extends Application {
     //// STATIC VARIABLES ////
@@ -100,6 +93,7 @@ public class SnakeApp extends Application {
             // Close file
             input.close();
         } catch (FileNotFoundException e) {
+            // Fills high scores with Developer scores if no scores exist yet.
             for (int i = 0; i < 10; i ++) {
                 highScores.add(new ScoreEntry("Developer", 100));
             }
@@ -238,6 +232,7 @@ public class SnakeApp extends Application {
                     // Limits input to one input per frame.
                     if (inputs.size() > 0) {
                         KeyEvent currentEvent = inputs.get(0);
+                        // Changes snake's direction based on user input.
                         switch (currentEvent.getCode()) {
                             case UP:    case W: snake.setSpeed(0, -1); break;
                             case DOWN:  case S: snake.setSpeed(0, 1); break;
@@ -254,14 +249,14 @@ public class SnakeApp extends Application {
                     
                     // Checks if the snake is dead.
                     if (snake.isDead()) {
-                        // Stop the game loop and display the end screen.
+                        // Stops the game loop and displays the end screen.
                         snake.render(gc);
                         super.stop();
                         SnakeApp.displayEndScreen(rootGroup, primaryScene);
                     } else {
-                        // Clear canvas
+                        // Clears canvas
                         gc.clearRect(0, 0, APP_WIDTH, APP_HEIGHT);
-                        // Draw score if the snake is alive.
+                        // Draws score if the snake is alive.
                         renderScore(gc);
                     }
                     
@@ -272,10 +267,10 @@ public class SnakeApp extends Application {
                             
                     
                     //// RENDER ////
-                    
                     snake.render(gc);
                     food.render(gc);
                     
+                    // Updates variable used to limit refresh rate.
                     timeSinceLastUpdate = currentNanoTime;
                 }
             }
@@ -328,7 +323,7 @@ public class SnakeApp extends Application {
         backgroundRect.setStrokeWidth(3);
         backgroundRect.setFill(BACKGROUND_COLOR);
         
-        // Display score
+        // Display score. Offsets score text based on length of score.
         Label finalScore = new Label("Score: " + currentScore);
         finalScore.setFont(generalFont);
         finalScore.setStyle("-fx-text-fill: rgb(0, 32, 0);");
@@ -376,17 +371,19 @@ public class SnakeApp extends Application {
             e.printStackTrace();
         }
         
-        // Adds button functionality
+        // Adds button functionality.
         retryButton.setOnAction(e -> startGame(primaryScene));
         menuButton.setOnAction(e -> displayMainMenu(primaryScene));
     }
     
+    // Renders the score at the top of the window during gameplay.
     public static void renderScore(GraphicsContext gc) {
         gc.setFill(Color.rgb(0, 32, 0));
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText("" + currentScore, APP_WIDTH / 2, 25);
     }
 
+    // Function needed by JavaFX
     public static void main(String[] args) {
         launch(args);
     }

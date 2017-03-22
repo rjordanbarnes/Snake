@@ -3,17 +3,8 @@ package snake;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Jordan
- */
 public class Food {
+    // Positioning and color variables.
     private int x, y;
     private Color foodColor = Color.rgb(199, 131, 163);
     
@@ -58,6 +49,7 @@ public class Food {
             this.y = getRandomY();
             
             for (int i = 0; i < snake.getTail().size(); i++) {
+                // Checks if food placement would overlap the snake.
                 if ((x == snake.getTail().get(i).x && y == snake.getTail().get(i).y) ||
                         (x == snake.getX() && y == snake.getY())) {
                     validLocation = false;

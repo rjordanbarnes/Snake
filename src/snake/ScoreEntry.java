@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package snake;
 
 import javafx.scene.control.Label;
 
-/**
- *
- * @author Jordan
- */
 class ScoreEntry {
     private String name;
     private int score;
@@ -22,20 +13,24 @@ class ScoreEntry {
         this.buildLabel();
     }
     
+    // Creates a label to be displayed on the High Scores screen.
     public void buildLabel() {
         label = new Label(name + "....." + score);
         label.setStyle("-fx-background-color: none;-fx-text-fill: rgb(0, 32, 0);");
         label.setFont(SnakeApp.generalFont);
     }
     
+    // Returns the player name who achieved the score.
     public String getName() {
         return name;
     }
     
+    // Returns the score.
     public int getScore() {
         return score;
     }
     
+    // Returns the label built by buildLabel
     public Label getLabel() {
         return label;
     }

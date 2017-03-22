@@ -4,16 +4,6 @@ import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Jordan
- */
 public class Snake {
     // Positioning
     private int x, y;
@@ -30,7 +20,7 @@ public class Snake {
     private ArrayList<SnakeTailSegment> tail = new ArrayList<SnakeTailSegment>();
     private int extraLength = 0;
     
-    // Creates a snake with a specific x and y coordinate.
+    // Creates a snake with a specific x and y coordinate and moving to the right.
     public Snake(int x, int y) {
         this.x = x;
         this.y = y;
